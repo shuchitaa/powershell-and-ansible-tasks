@@ -1,0 +1,29 @@
+ - hosts: localhost
+    vars_prompt:
+
+      - name: username
+        prompt: What is your username?
+        private: no
+
+      - name: password
+        prompt: What is your password?
+        private: no
+
+    tasks:
+
+      - name: Print a message
+        ansible.builtin.debug:
+          msg: "Logging in as {{ username }}"
+      - name: create a file
+        file:
+          path: "/root/newfile.txt"
+          state: touch
+          mode: 0777
+          owner: root
+      - name: copying the input to the file
+        copy:
+          dest: "/root/newfile.txt"
+          content: |
+            {{username}}
+            {{password}}
+

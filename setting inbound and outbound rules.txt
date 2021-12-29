@@ -1,0 +1,14 @@
+ Import-Module -Name 'NetSecurity'  
+
+#to display inbound and outbound rules with specific port number
+Get-NetFirewallRule | Get-NetFirewallPortFilter | Where-Object {$_.LocalPort -eq 80}
+Get-NetFirewallRule | Get-NetFirewallPortFilter | Where-Object {$_.LocalPort -eq 8080}
+
+#above command will not show any output bacause no rules are set for port 8080  
+#to set inbound or outbound rules New-NetfirewallRule cmdlet is used
+New-NetFirewallRule -DisplayName "HTTP service" -Direction Inbound -Protocol TCP -LocalPort 8080 -Action Allow 
+New-NetFirewallRule -DisplayName "HTTP-alt" -Direction Outbound -Protocol UDP -LocalPort 8080 -Action Allow  
+
+#transfering the output to a txt file 
+$s=Get-NetFirewallRule | Get-NetFirewallPortFilter | Where-Object {$_.LocalPort -eq 8080}  
+$s | Out-File "C:\Users\Administrator.DEMO\Desktop\taskoutput.txt" -force -append 

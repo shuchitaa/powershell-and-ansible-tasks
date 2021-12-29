@@ -1,0 +1,27 @@
+$stopwatch =  [system.diagnostics.stopwatch]::StartNew()
+$stopwatch
+Invoke-Command -ComputerName localhost -ScriptBlock{
+$proc = Start-Process notepad
+$count=20
+
+
+for(;;){
+$proc
+Get-Process notepad
+
+$process=gwmi Win32_PerfFormattedData_PerfProc_Thread |select -first 20 | ft -auto Name,IDProcess,IDThread,PercentProcessorTime 
+
+$a=(Get-Process "Notepad" | Select-Object ID)
+write-host "ehllo" $a.id
+write-host $StopWatch.ElapsedMilliseconds
+if($StopWatch.ElapsedMilliseconds -eq "20000"){
+
+Wait-process -ID $a.id -Timeout 10
+Stop-Process -id $a.id
+
+write-host "process killed"
+break
+  
+}
+
+}}
